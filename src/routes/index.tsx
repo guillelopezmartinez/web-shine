@@ -1,24 +1,46 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight, CircleCheck, Droplets, Zap } from "lucide-react";
+import hero from "@/assets/hero.jpg.asset.json";
+import wind from "@/assets/wind.jpg.asset.json";
+import solar from "@/assets/solar.jpg.asset.json";
+import water from "@/assets/water.jpg.asset.json";
+import { Button } from "@/components/ui/button";
+import { SiteLayout } from "@/components/SiteLayout";
+import { projects, services } from "@/data/site";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "Voltae | Ingeniería de energía y agua" },
+      { name: "description", content: "Ingeniería y consultoría para proyectos de generación, transmisión, distribución eléctrica y tratamiento de agua." },
+      { property: "og:title", content: "Voltae | Ingeniería de energía y agua" },
+      { property: "og:description", content: "Soluciones integrales para todo el ciclo de vida de proyectos de energía y agua." },
+      { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }, { property: "og:url", content: "/" },
+    ], links: [{ rel: "canonical", href: "/" }],
+    scripts: [{ type: "application/ld+json", children: JSON.stringify({ "@context":"https://schema.org", "@type":"Organization", name:"Voltae Engineering", url:"/", email:"info@voltae.com", areaServed:["España","México","Colombia","Chile","Italia"], knowsAbout:["Ingeniería eléctrica","Energías renovables","Tratamiento de agua","Gestión de proyectos"] }) }],
+  }), component: Home,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+const imageFor: Record<string,string> = { wind: wind.url, solar: solar.url, substation: hero.url, water: water.url };
+
+function Home() { return <SiteLayout>
+  <section className="relative min-h-[92svh] overflow-hidden bg-deep text-primary-foreground">
+    <img src={hero.url} alt="Infraestructura eléctrica proyectada por Voltae" className="absolute inset-0 h-full w-full object-cover opacity-65" fetchPriority="high" />
+    <div className="absolute inset-0 bg-gradient-to-r from-deep via-deep/75 to-deep/10" />
+    <div className="relative mx-auto flex min-h-[92svh] max-w-7xl items-end px-6 pb-16 pt-32 sm:pb-24">
+      <div className="max-w-4xl"><p className="mb-5 text-sm font-semibold uppercase tracking-widest text-electric">Energía · Agua · Infraestructura</p><h1 className="max-w-4xl text-5xl font-semibold leading-[0.98] sm:text-7xl lg:text-8xl">Ingeniería que mueve el mundo.</h1><p className="mt-7 max-w-2xl text-lg leading-relaxed text-primary-foreground/75 sm:text-xl">Más de 20 años diseñando, supervisando y optimizando proyectos críticos de energía y agua.</p><div className="mt-9 flex flex-wrap gap-3"><Button asChild variant="hero" size="lg" className="rounded-full"><Link to="/proyectos">Ver proyectos <ArrowRight /></Link></Button><Button asChild variant="glass" size="lg" className="rounded-full text-primary-foreground"><Link to="/servicios">Explorar servicios</Link></Button></div></div>
     </div>
-  );
-}
+    <div className="absolute bottom-6 right-6 hidden gap-3 lg:flex"><div className="liquid-glass-dark rounded-2xl px-5 py-4"><strong className="block text-2xl">+200</strong><span className="text-xs text-primary-foreground/60">proyectos T&amp;D</span></div><div className="liquid-glass-dark rounded-2xl px-5 py-4"><strong className="block text-2xl">500 kV</strong><span className="text-xs text-primary-foreground/60">alta tensión</span></div></div>
+  </section>
+
+  <section className="mesh-background px-6 py-24"><div className="mx-auto max-w-7xl"><div className="max-w-3xl"><p className="text-sm font-semibold text-primary">Nuestro enfoque</p><h2 className="mt-3 text-4xl font-semibold sm:text-6xl">Un socio técnico para todo el ciclo de vida.</h2><p className="mt-6 text-lg leading-relaxed text-muted-foreground">Desde la definición de necesidades hasta la puesta en marcha, reunimos estrategia, ingeniería y gestión en un único equipo.</p></div><div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{["Clientes y servicio en el centro","Flexibilidad en plazo y disponibilidad","Capacidad multidisciplinar e integral","Innovación y procesos eficientes","Experiencia y competencia profesional","Compromiso con los resultados"].map((x,i)=><div key={x} className="liquid-glass rounded-3xl p-6"><span className="text-xs font-semibold text-primary">0{i+1}</span><CircleCheck className="my-7 text-primary"/><h3 className="text-lg font-semibold">{x}</h3></div>)}</div></div></section>
+
+  <section className="bg-deep px-6 py-24 text-primary-foreground"><div className="mx-auto max-w-7xl"><div className="flex flex-col justify-between gap-5 md:flex-row md:items-end"><div><p className="text-sm font-semibold text-electric">Áreas de conocimiento</p><h2 className="mt-3 text-4xl font-semibold sm:text-6xl">Energía y agua, sin silos.</h2></div><p className="max-w-lg text-primary-foreground/60">Capacidad técnica integrada para activos que deben funcionar hoy y seguir siendo relevantes mañana.</p></div><div className="mt-12 grid gap-5 lg:grid-cols-2">{[["Energía","Generación fotovoltaica, eólica y BESS. Líneas, subestaciones GIS/AIS y distribución hasta 500 kV.",solar.url,Zap],["Agua","Agua industrial y urbana: tratamiento, reutilización, depuración, potabilización y desalación.",water.url,Droplets]].map(([t,c,img,Icon])=><article key={String(t)} className="group relative min-h-[520px] overflow-hidden rounded-[2rem]"><img src={String(img)} alt={`${t} — proyectos Voltae`} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"/><div className="absolute inset-0 bg-gradient-to-t from-deep via-deep/35 to-transparent"/><div className="absolute inset-x-0 bottom-0 p-8"><span className="liquid-glass-dark mb-5 inline-flex size-12 items-center justify-center rounded-full">{typeof Icon !== "string" && <Icon/>}</span><h3 className="text-4xl font-semibold">{t}</h3><p className="mt-3 max-w-xl text-primary-foreground/70">{c}</p></div></article>)}</div></div></section>
+
+  <section className="px-6 py-24"><div className="mx-auto max-w-7xl"><p className="text-sm font-semibold text-primary">Cartera integral</p><h2 className="mt-3 max-w-3xl text-4xl font-semibold sm:text-6xl">De la concepción a la operación.</h2><div className="mt-12 grid border-y border-border md:grid-cols-4">{["Concepción","Desarrollo","Ejecución","Operación"].map((x,i)=><div key={x} className="border-b border-border py-8 md:border-b-0 md:border-r md:px-6 first:pl-0 last:border-r-0"><span className="text-sm text-primary">0{i+1}</span><h3 className="mt-12 text-2xl font-semibold">{x}</h3><p className="mt-3 text-sm text-muted-foreground">Decisiones técnicas trazables, control de riesgos y entrega coordinada.</p></div>)}</div><div className="mt-16 grid gap-4 md:grid-cols-2">{services.map((s,i)=><Link key={s.title} to="/servicios" className="liquid-glass group rounded-3xl p-7 sm:p-9"><div className="flex items-start justify-between"><span className="text-sm text-primary">0{i+1}</span><ArrowRight className="transition-transform group-hover:translate-x-1"/></div><h3 className="mt-12 text-3xl font-semibold">{s.title}</h3><p className="mt-3 max-w-lg text-muted-foreground">{s.copy}</p></Link>)}</div></div></section>
+
+  <section className="bg-secondary px-6 py-24"><div className="mx-auto max-w-7xl"><div className="flex items-end justify-between gap-6"><div><p className="text-sm font-semibold text-primary">Proyectos seleccionados</p><h2 className="mt-3 text-4xl font-semibold sm:text-6xl">Ingeniería en terreno.</h2></div><Button asChild variant="glass" className="hidden rounded-full sm:inline-flex"><Link to="/proyectos">Todos los proyectos <ArrowRight/></Link></Button></div><div className="mt-12 grid gap-5 md:grid-cols-3">{projects.slice(0,3).map(p=><Link key={p.slug} to="/proyectos/$slug" params={{slug:p.slug}} className="group"><div className="aspect-[4/3] overflow-hidden rounded-3xl"><img src={imageFor[p.image]} alt={p.title} loading="lazy" className="h-full w-full object-cover transition duration-700 group-hover:scale-105"/></div><p className="mt-5 text-sm text-primary">{p.area} · {p.place}</p><h3 className="mt-1 text-2xl font-semibold">{p.title}</h3><p className="mt-2 text-muted-foreground">{p.metric}</p></Link>)}</div></div></section>
+
+  <section className="px-6 py-24"><div className="liquid-glass mx-auto max-w-7xl rounded-[2rem] p-8 sm:p-14"><div className="grid gap-10 lg:grid-cols-2"><div><p className="text-sm font-semibold text-primary">Respuesta directa</p><h2 className="mt-3 text-4xl font-semibold sm:text-5xl">¿Qué puede hacer Voltae por tu proyecto?</h2></div><div className="space-y-6">{[["¿Qué sectores cubre Voltae?","Generación renovable, transmisión y distribución eléctrica, almacenamiento BESS, agua industrial y agua urbana."],["¿En qué fases participa?","En cualquiera de ellas o de forma integral: concepción, desarrollo, ejecución y operación."],["¿Dónde trabaja?","Voltae cuenta con oficinas en España, México, Colombia, Chile e Italia y experiencia internacional."]].map(([q,a])=><div key={q} className="border-b border-border pb-6"><h3 className="text-lg font-semibold">{q}</h3><p className="mt-2 text-muted-foreground">{a}</p></div>)}</div></div></div></section>
+  <section className="bg-deep px-6 py-24 text-primary-foreground"><div className="mx-auto max-w-7xl text-center"><p className="text-sm font-semibold text-electric">Tu próximo proyecto</p><h2 className="mx-auto mt-4 max-w-4xl text-5xl font-semibold sm:text-7xl">Hagamos que la infraestructura avance.</h2><Button asChild variant="hero" size="lg" className="mt-9 rounded-full"><Link to="/contacto">Contactar con Voltae <ArrowRight/></Link></Button></div></section>
+</SiteLayout> }
